@@ -1,0 +1,54 @@
+import processing.core.PApplet;
+
+public class Main extends PApplet {
+
+	static int xLines = 3;
+	static int yLines = 3;
+
+	public static void main(String[] args) {
+		PApplet.main("Main");
+	}
+
+	public void settings() {
+		size(900, 900);
+	}
+
+	public void setup() {
+		frameRate(60);
+		background(255);
+	}
+
+	public void draw() {
+		drawBoard();
+		drawX(1);
+	}
+
+	public void drawBoard() {
+		stroke(0);
+		strokeWeight(10);
+		int lineXPos = width / xLines;
+		int lineYPos = height / yLines;
+		for (int i = 1; i < xLines; i++) {
+			line(lineXPos * i, 0, lineXPos * i, height);
+		}
+		for (int j = 1; j < yLines; j++) {
+			line(0, lineYPos * j, width, lineYPos * j);
+		}
+	}
+
+	public void drawX(int pos) {
+		stroke(0);
+		strokeWeight(10);
+		int xPos = (width/(xLines*2)*((pos % 3)+((pos % 3) +1)));
+		int yPos = 150; 
+		line(xPos - 100, yPos - 100, xPos + 100, yPos + 100);
+		line(xPos + 100, yPos - 100, xPos - 100, yPos + 100);
+
+	}
+	
+	public void drawO(int pos){
+		
+		
+	}
+
+}

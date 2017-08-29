@@ -1,0 +1,20 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main_4 {
+	
+	static Scanner scanner = new Scanner(System.in);
+
+	public static void main(String[] args) {
+		
+		ArrayList<char> direction = new ArrayList<char>();
+		ArrayList<Integer> value = new ArrayList<Integer>();
+		
+		for (int i = 0; !(value.get(i).equals(0)); i++){
+			char e  = scanner.next().charAt(0);
+			direction.add(e);
+		}
+		
+	}
+
+}

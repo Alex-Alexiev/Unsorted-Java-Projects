@@ -1,0 +1,91 @@
+import java.util.Scanner;
+
+public class Main_4 {
+
+	Vector drillPos = new Vector(0, -1);
+	Scanner scanner = new Scanner(System.in);
+	boolean[][] grid = new boolean[400][200];
+	boolean safety = true;
+
+	public static void main(String[] args) {
+		new Main_4().run();
+	}
+
+	void run() {
+		drillPoint(drillPos.x, drillPos.y);
+		drillLine('d', 2);
+		drillLine('r', 3);
+		drillLine('d', 2);
+		drillLine('r', 2);
+		drillLine('u', 2);
+		drillLine('r', 2);
+		drillLine('d', 2);
+		drillLine('l', 8);
+		drillLine('u', 2);
+		System.out.println(drillPos);
+		System.out.println(safety);
+
+	}
+
+	void drillPoint(int x, int y) {
+		grid[x + 200][1 - y] = true;
+	}
+
+	void drillLine(char direction, int amount) {
+		if (direction == 'u') {
+			for (int i = drillPos.y + 1; i <= drillPos.y + amount; i++) {
+				if (drilled(drillPos.x, i)) {
+					safety = false;
+				}
+				drillPoint(drillPos.x, i);
+			}
+			drillPos.y += amount;
+		}
+		if (direction == 'd') {
+			for (int i = drillPos.y - 1; i >= drillPos.y - amount; i--) {
+				if (drilled(drillPos.x, i)) {
+					safety = false;
+				}
+				drillPoint(drillPos.x, i);
+			}
+			drillPos.y -= amount;
+		}
+		if (direction == 'r') {
+			for (int i = drillPos.x + 1; i <= drillPos.x + amount; i++) {
+				if (drilled(i, drillPos.y)) {
+					safety = false;
+				}
+				drillPoint(i, drillPos.y);
+			}
+			drillPos.x += amount;
+		}
+		if (direction == 'l') {
+			for (int i = drillPos.x - 1; i >= drillPos.x - amount; i--) {
+				if (drilled(i, drillPos.y)) {
+					safety = false;
+				}
+				drillPoint(i, drillPos.y);
+			}
+			drillPos.x -= amount;
+		}
+	}
+
+	boolean drilled(int x, int y) {
+		return grid[x + 200][1 - y];
+	}
+
+	public class Vector {
+
+		int x = 0;
+		int y = 0;
+
+		Vector(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+
+		public String toString() {
+			return Integer.toString(x) + ":" + Integer.toString(y);
+		}
+	}
+}

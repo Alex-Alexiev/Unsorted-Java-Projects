@@ -1,0 +1,16 @@
+!SESSION 2016-10-28 12:23:07.578 -----------------------------------------------
+eclipse.buildId=4.6.0.I20160606-1100
+java.version=1.8.0_92
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product -data C:\Users\aalexiev\Google Drive\Programming\Eclipse Projects -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2016-10-28 12:23:11.637
+!MESSAGE The 'tern.eclipse.ide.ui.hyperlink.TernHyperlinkDetector.SCRIPT' extension from plug-in 'tern.eclipse.ide.jsdt.ui' to the 'org.eclipse.ui.workbench.texteditor.hyperlinkDetectors' extension point will be ignored because it contains invalid attributes.
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2016-10-28 12:23:11.653
+!MESSAGE The 'tern.eclipse.ide.ui.hyperlink.TernHyperlinkDetector.SCRIPT.events' extension from plug-in 'tern.eclipse.ide.jsdt.ui' to the 'org.eclipse.ui.workbench.texteditor.hyperlinkDetectors' extension point will be ignored because it contains invalid attributes.
+
+!ENTRY org.eclipse.ui.workbench.texteditor 4 0 2016-10-28 12:23:11.653
+!MESSAGE The 'tern.eclipse.ide.ui.hyperlink.TernHyperlinkDetector.HTML' extension from plug-in 'tern.eclipse.ide.jsdt.ui' to the 'org.eclipse.ui.workbench.texteditor.hyperlinkDetectors' extension point will be ignored because it contains invalid attributes.

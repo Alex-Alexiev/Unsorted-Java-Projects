@@ -1,0 +1,221 @@
+import java.awt.Color;
+import processing.core.PApplet;
+
+public class Spaceship {
+
+	private int x, y, w, h, x1, y1, x2, y2, x3, y3, dx = 0, dy = 0, strokeWeight = 1;
+	// private float x = 0, y = 0, w = 0, h = 0;
+	private PApplet screen;
+	private Color fillColor = Color.WHITE, strokeColor = Color.BLACK;
+	// private float[] cords = new float[]{0, 0, 0, 0, 0, 0};
+
+	public Spaceship(PApplet screen_, int x1_, int y1_, int x2_, int y2_, int x3_, int y3_, int dx_, int dy_,
+			Color fillColor_, Color strokeColor_, int strokeWeight_) {
+		strokeWeight = strokeWeight_;
+		strokeColor = strokeColor_;
+		fillColor = fillColor_;
+		screen = screen_;
+		dx = dx_;
+		dy = dy_;
+		x1 = x1_;
+		x2 = x2_;
+		x3 = x3_;
+		y1 = y1_;
+		y2 = y2_;
+		y3 = y3_;
+		x = x1;
+		y = y1;
+		w = x2 - x3;
+		h = y2 - y1;
+		screen.println(x, y, w, h);
+
+		// cords = cords_;
+		// x = cords_[0];
+		// y = cords_[1];
+		// w = cords_[2] - cords_[4];
+		// h = cords_[3] - cords_[1];
+	}
+
+	public void move() {
+
+		if (x1 + w / 2 > screen.width || x - w / 2 < 0 || y + h / 2 > screen.height || y - h < 0) {
+			if (x + w / 2 > screen.width) {
+				dx = 0;
+			}
+
+			else if (x - w / 2 < 0) {
+				dx = screen.width;
+			}
+
+			else if (y + h / 2 > screen.height) {
+				dy = 0;
+			}
+
+			else if (y - h < 0) {
+				dy = screen.height;
+			}
+
+			x1 = dx;
+			y1 = dy;
+			x2 = dx + w / 2;
+			y2 = dy + h;
+			x3 = dx - w / 2;
+			y3 = dy + h;
+		}
+
+		else if (screen.key == screen.CODED) {
+
+			if (screen.keyCode == screen.DOWN) {
+
+				dy += 0.2;
+				y1 += dy;
+				y2 += dy;
+				y3 += dy;
+
+			}
+
+			if (screen.keyCode == screen.UP) {
+
+				dy -= 1;
+			}
+
+			/*
+			 * x1 += dx; y1 += dy; x2 += dx; y2 += dy; x3 += dx; y3 += dy;
+			 */
+
+		}
+
+	}
+	
+	private void warp(){
+		
+		if (x1 + w / 2 > screen.width || x - w / 2 < 0 || y + h / 2 > screen.height || y - h < 0) {
+			if (x + w / 2 > screen.width) {
+				dx = 0;
+			}
+
+			else if (x - w / 2 < 0) {
+				dx = screen.width;
+			}
+
+			else if (y + h / 2 > screen.height) {
+				dy = 0;
+			}
+
+			else if (y - h < 0) {
+				dy = screen.height;
+			}
+
+			x1 = dx;
+			y1 = dy;
+			x2 = dx + w / 2;
+			y2 = dy + h;
+			x3 = dx - w / 2;
+			y3 = dy + h;
+		}
+	}
+
+	public void display() {
+		screen.stroke(strokeColor.getRGB());
+		screen.strokeWeight(strokeWeight);
+		screen.fill(fillColor.getRGB());
+		// screen.triangle(cords[0], cords[1], cords[2], cords[3], cords[4],
+		// cords[5]);
+		screen.triangle(x1, y1, x2, y2, x3, y3);
+	}
+
+	// ------------- Accessors -------------- //
+
+	public int get_x() {
+		return (int) x;
+	}
+
+	public int get_y() {
+		return (int) y;
+	}
+
+	public int get_w() {
+		return (int) w;
+	}
+
+	public int get_h() {
+		return (int) h;
+	}
+
+	public int get_dx() {
+		return dx;
+	}
+
+	public int get_dy() {
+		return dy;
+	}
+
+	public Color get_fillColor() {
+		return fillColor;
+	}
+
+	public Color get_strokeColor() {
+		return strokeColor;
+	}
+
+	public int get_strokeWeight() {
+		return strokeWeight;
+	}
+
+	// ------------------------------------ //
+
+	// ------------ Mutators -------------- //
+
+	public void set_x(int x_) {
+		x = x_;
+	}
+
+	public void set_y(int y_) {
+		y = y_;
+	}
+
+	public void set_w(int w_) {
+		w = w_;
+	}
+
+	public void set_h(int h_) {
+		h = h_;
+	}
+
+	public void set_dx(int dx_) {
+		dx = dx_;
+	}
+
+	public void set_dy(int dy_) {
+		dy = dy_;
+	}
+
+	public void set_fillColor(Color fillColor_) {
+		fillColor = fillColor_;
+	}
+
+	public void set_strokeColor(Color strokeColor_) {
+		strokeColor = strokeColor_;
+	}
+
+	public void set_strokeWeight(int strokeWeight_) {
+		strokeWeight = strokeWeight_;
+	}
+
+	// ----------------------------------- //
+
+	public boolean overlaps(Projectiles obj) {
+		return (PApplet.abs(get_x() - obj.get_x()) < (get_w() + obj.get_w()) / 2
+				&& PApplet.abs(get_y() - obj.get_y()) < (get_h() + obj.get_h()) / 2);
+	}
+
+	public boolean overlaps(Asteroids obj) {
+		return (PApplet.abs(get_x() - obj.get_x()) < (get_w() + obj.get_w()) / 2
+				&& PApplet.abs(get_y() - obj.get_y()) < (get_h() + obj.get_h()) / 2);
+	}
+
+	public boolean overlaps(movingText obj) {
+		return (PApplet.abs(get_x() - obj.get_x()) < (get_w() + obj.get_w()) / 2
+				&& PApplet.abs(get_y() - obj.get_y()) < (get_h() + obj.get_h()) / 2);
+	}
+}

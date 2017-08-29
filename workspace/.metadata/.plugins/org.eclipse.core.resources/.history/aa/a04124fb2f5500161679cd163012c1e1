@@ -1,0 +1,120 @@
+import processing.core.PApplet;
+import java.awt.Color;
+import java.util.ArrayList;
+
+public class Asteroids_Basis extends PApplet {
+
+	public static void main(String[] args) {
+		PApplet.main("Asteroids_Basis");
+	}
+
+	public void settings() {
+		size(800, 800);
+	}
+
+	ArrayList<Asteroids> asteroids;
+	ArrayList<Integer> for_deletion;
+	Score score;
+	
+	int num_of_asteroids = 5;
+
+	public void setup() {
+		surface.setResizable(true);
+		frameRate(60);
+		fill(255);
+		for_deletion = new ArrayList<Integer>();
+		asteroids = new ArrayList<Asteroids>();
+		for (int i = 0; i < num_of_asteroids; i++) {
+			
+			int negator = ((int) random(0, 1) == 0 ? -1 : 1);
+			asteroids.add(new Asteroids(this, (int) random(30, width - 30),
+					(int) random(30, height - 30), 60, 60, (int) random(5, 10) * negator, 
+					(int) random(5, 10) * negator, new Color(255, 255, 255), new Color(0, 0, 255), 3));
+		}
+		score = new Score(this, 0, width / 4, 50, 28, 0, 0, new Color(255, 255, 255), 3);
+		
+	}
+
+	public void draw() {
+		if (!lost) {
+			if (for_deletion.size() > 0) {
+				for_deletion = new ArrayList<Integer>();
+			}
+			background(0);
+			pad1.move();
+			pad1.display();
+			pad2.move();
+			pad2.display();
+			for (movingEllipse i : ellipses) {
+				i.move();
+				if (pad1.overlaps(i)) {
+					i.set_x(i.get_x() - i.get_dx());
+					i.set_dx(-i.get_dx());
+					score1.increment_score(2);
+				}
+				if (pad2.overlaps(i)) {
+					i.set_x(i.get_x() - i.get_dx());
+					i.set_dx(-i.get_dx());
+					score2.increment_score(2);
+				}
+				if (i.get_x() <= pad1.get_x() + pad1.get_w() / 2) {
+					score1.decrement_score(1);
+					for_deletion.add(ellipses.indexOf(i));
+				}
+				if (i.get_x() >= pad2.get_x() - pad2.get_w() / 2) {
+					score2.decrement_score(1);
+					for_deletion.add(ellipses.indexOf(i));
+				}
+				i.display();
+			}
+			for (int i = for_deletion.size() - 1; i >= 0; i--) {
+				ellipses.remove((int) for_deletion.get(i));
+			}
+			if (ellipses.size() == 0) {
+				lost = true;
+			}
+			else if (frameCount % ((int) frameRate * 3) == 0) {
+				int radius = (int) random(10, 12);
+				int dir = ((int) random(0, 1) == 0 ? -1 : 1);
+				ellipses.add(new movingEllipse(this, (int) random(width / 4, 3 * width / 4),
+						(int) random(height / 4, 3 * height / 4), radius, radius, (int) random(5, 10) * dir,
+						(int) random(5, 10) * dir, new Color(255, 255, 255), new Color(0, 0, 255), 3));
+			}
+			score1.display();
+			score2.display();
+		}
+		else {
+			background(0);
+			textAlign(CENTER);
+			textSize(32);
+			if (score1.get_score_value() > score2.get_score_value()) {
+				text("Player 1 WINS!", width/2, height/2);
+			}
+			else if (score2.get_score_value() > score1.get_score_value()) {
+				text("Player 2 WINS!", width/2, height/2);
+			}
+			else {
+				text("IT'S A DRAW, HOW SHAMEFUL!", width/2, height/2);
+			}
+			textSize(24);
+			text("Press ESC to exit, or 'r' to restart.", width/2, height/2 + 40);
+			if (keyPressed && key == 'r') {
+				reset();
+			}
+		}
+		textSize(22);
+		text("FPS: " + Float.toString(frameRate), width/2, 50);
+	}
+	
+	public void reset() {
+		key = 0;
+		lost = false;
+		score1.set_score_value(0);
+		score2.set_score_value(0);
+		int radius = (int) random(10, 12);
+		int dir = ((int) random(0, 1) == 0 ? -1 : 1);
+		ellipses.add(new movingEllipse(this, (int) random(width / 4, 3 * width / 4),
+				(int) random(height / 4, 3 * height / 4), radius, radius, (int) random(5, 10) * dir, (int) random(5, 10) * dir,
+				new Color(255, 255, 255), new Color(0, 0, 255), 3));
+	}
+}

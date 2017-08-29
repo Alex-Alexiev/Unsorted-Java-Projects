@@ -1,0 +1,9 @@
+
+public class Main_1 {
+
+	public static void main(String[] args){
+		int[] digit = {0,5,2};
+		System.out.println(91+digit[0]+digit[2]+(digit[1]*3));
+	}
+	
+}

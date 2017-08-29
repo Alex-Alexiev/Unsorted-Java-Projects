@@ -1,0 +1,29 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main_4 {
+	
+	Vector drillPos = new Vector(0,-1);
+	Scanner scanner = new Scanner(System.in);
+
+	public static void main(String[] args) {
+		new Main_4().run();
+	}
+	
+	void run(){
+		
+	}
+
+	public class Vector {
+		
+		int x = 0;
+		int y = 0;
+		
+		Vector(int x, int y){
+			this.x = x;
+			this.y = y;
+		}
+	}
+}
+
+

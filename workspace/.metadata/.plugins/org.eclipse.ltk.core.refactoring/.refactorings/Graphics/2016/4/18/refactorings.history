@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename compilation unit &apos;sprite.java&apos; to &apos;Sprite.java&apos;&#x0D;&#x0A;- Original project: &apos;Graphics&apos;&#x0D;&#x0A;- Original element: &apos;sprite.java&apos;&#x0D;&#x0A;- Renamed element: &apos;Sprite.java&apos;" description="Rename compilation unit &apos;sprite.java&apos;" flags="2" id="org.eclipse.jdt.ui.rename.compilationunit" input="/src&lt;{sprite.java" name="Sprite.java" references="false" stamp="1462058123878" version="1.0"/>
+</session>

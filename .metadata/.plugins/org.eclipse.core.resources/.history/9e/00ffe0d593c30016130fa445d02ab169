@@ -1,0 +1,467 @@
+import java.util.Random;
+import processing.core.PApplet;
+
+public class Main extends PApplet {
+
+	Random random = new Random();
+	static int xLines = 3;
+	static int yLines = 3;
+	static int[][] status = { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
+	static boolean xTurn = true;
+	static long startTime = System.currentTimeMillis() /1000;
+
+	public static void main(String[] args) {
+		PApplet.main("Main");
+	}
+
+	public void settings() {
+		size(900, 900);
+	}
+
+	public void setup() {
+		frameRate(60);
+		background(0);
+	}
+
+	public void draw() {
+		background(0);
+		
+		drawAll();
+		
+		if (statusSum() == 1) {
+			firstMove();
+		}
+		
+		if (!xTurn){
+			if (winnable()) {
+				win();
+				xTurn = true;
+				drawAll();
+			}
+			else if (blockable()) {
+				block();
+				xTurn = true;
+				drawAll();
+			}
+			else{
+				randomMove();
+				xTurn = true;
+				drawAll();
+			}
+			
+			drawAll();
+		}
+
+		if ((xWin() || oWin()) || full()) {
+			clear();
+			xTurn = true; 
+			drawAll();
+		}
+		
+		drawAll();
+	}
+
+	public void drawAll() {
+		stroke(255);
+		strokeWeight(10);
+		fill(0);
+		int lineXPos = width / xLines;
+		int lineYPos = height / yLines;
+
+		for (int i = 1; i < xLines; i++) {
+			line(lineXPos * i, 0, lineXPos * i, height);
+		}
+		for (int j = 1; j < yLines; j++) {
+			line(0, lineYPos * j, width, lineYPos * j);
+		}
+
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				int pos = 3 * i + j + 1;  
+
+				int xPos = (width / (xLines * 2) * (((pos - 1) % 3) + (((pos - 1) % 3) + 1)));
+
+				int yPos = 0;
+
+				if (status[i][j] == 1) {
+
+					if (pos < 4 && pos > 0) {
+						yPos = 150;
+					}
+					;
+					if (pos < 7 && pos > 3) {
+						yPos = 450;
+					}
+					;
+					if (pos < 10 && pos > 6) {
+						yPos = 750;
+					}
+					;
+
+					line(xPos - 100, yPos - 100, xPos + 100, yPos + 100);
+					line(xPos + 100, yPos - 100, xPos - 100, yPos + 100);
+				}
+
+				if (status[i][j] == 2) {
+
+					if (pos < 4 && pos > 0) {
+						yPos = 150;
+					}
+					;
+					if (pos < 7 && pos > 3) {
+						yPos = 450;
+					}
+					;
+					if (pos < 10 && pos > 6) {
+						yPos = 750;
+					}
+					;
+					ellipse(xPos, yPos, 200, 200);
+
+				}
+			}
+
+		} 
+
+	}
+
+	public void mouseClicked() {
+		int mouseXPos = mouseX / (width / 3);// second value in array
+		int mouseYPos = mouseY / (height / 3);// first value in array	
+		xTurn = true;
+		if (xTurn) {
+			status[mouseYPos][mouseXPos] = status[mouseYPos][mouseXPos] = 1;
+			xTurn = false;	
+		}
+		xTurn = false;
+	}
+
+	public boolean xWin() {
+		for (int i = 0; i < 3; i++) {
+
+			if ((checkX(i, 0) && checkX(i, 1) && checkX(i, 2))) {
+				line(i + 1, i + 7);
+				return true;
+			} else if ((checkX(0, i) && checkX(1, i) && checkX(2, i))) {
+				line(i * 3 + 1, i * 3 + 3);
+				return true;
+			} else if ((checkX(0, 0) && checkX(1, 1) && checkX(2, 2))) {
+				line(1, 9);
+				return true;
+			} else if ((checkX(2, 0) && checkX(1, 1) && checkX(0, 2))) {
+				line(3, 7);
+				return true;
+			}
+
+		}
+		return false;
+	}
+
+	public boolean oWin() {
+		for (int i = 0; i < 3; i++) {
+			if ((checkO(i, 0) && checkO(i, 1) && checkO(i, 2))) {
+				line(i + 1, i + 7);
+				return true;
+			} else if ((checkO(0, i) && checkO(1, i) && checkO(2, i))) {
+				line(i * 3 + 1, i * 3 + 3);
+				return true;
+			} else if ((checkO(0, 0) && checkO(1, 1) && checkO(2, 2))) {
+				line(1, 9);
+				return true;
+			} else if ((checkO(2, 0) && checkO(1, 1) && checkO(0, 2))) {
+				line(3, 7);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean checkX(int x, int y) {
+		return (status[y][x] == 1);
+	}
+
+	public boolean checkO(int x, int y) {
+		return (status[y][x] == 2);
+	}
+
+	public void line(int pos1, int pos2) {
+		int pos1X = (width / (xLines * 2) * (((pos1 - 1) % 3) + (((pos1 - 1) % 3) + 1)));
+		int pos2X = (width / (xLines * 2) * (((pos2 - 1) % 3) + (((pos2 - 1) % 3) + 1)));
+		int pos1Y = 0;
+		int pos2Y = 0;
+		if (pos1 < 4 && pos1 > 0) {
+			pos1Y = 150;
+		}
+
+		else if (pos1 < 7 && pos1 > 3) {
+			pos1Y = 450;
+		}
+
+		else if (pos1 < 10 && pos1 > 6) {
+			pos1Y = 750;
+		}
+		;
+		if (pos2 < 4 && pos2 > 0) {
+			pos2Y = 150;
+		}
+
+		else if (pos2 < 7 && pos2 > 3) {
+			pos2Y = 450;
+		}
+
+		else if (pos2 < 10 && pos2 > 6) {
+			pos2Y = 750;
+		}
+		;
+		stroke(255, 0, 0);
+		line(pos1X, pos1Y, pos2X, pos2Y);
+	}
+
+	public void clear() {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				status[i][j] = 0;
+			}
+		}
+	}
+
+	public boolean full() {
+		int sum = 0;
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				sum += status[i][j];
+			}
+		}
+		return (sum >= 13);
+	}
+
+	public void firstMove() {
+		for (int i = 0; i < 3; i += 2) {
+			for (int j = 0; j < 3; j += 2) {
+				if (statusSum() == 1 && status[i][j] == 1) {
+					status[1][1] = 2;
+					i = 2;
+					j = 2;
+				}
+
+				else if (status[1][2] == 1) {
+					status[1][0] = 2;
+					i = 2;
+					j = 2;
+
+				} else {
+					status[1][2] = 2;
+					i = 2;
+					j = 2;
+				}
+			}
+		}
+		xTurn = true;
+		delay(1);
+	}
+
+	public int statusSum() {
+		int sum = 0;
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				sum += status[i][j];
+			}
+		}
+		return sum;
+	}
+
+	public boolean winnable() {
+		boolean winnable = false;
+		for (int i = 0; i < 3; i++) {
+			if (((status[i][0] + status[i][1] + status[i][2]) == 4)
+					&& ((status[i][0] != 1) && (status[i][1] != 1) && (status[i][2] != 1))) {
+				winnable = true;
+			}
+			if (((status[0][i] + status[1][i] + status[2][i]) == 4)
+					&& ((status[0][i] != 1) && (status[1][i] != 1) && (status[2][i] != 1))) {
+				winnable = true;
+			}
+			if (((status[0][0] + status[1][1] + status[2][2]) == 4)
+					&& ((status[0][0] != 1) && (status[1][1] != 1) && (status[2][2] != 1))) {
+				winnable = true;
+			}
+			if (((status[0][2] + status[1][1] + status[2][0]) == 4)
+					&& ((status[0][2] != 1) && (status[1][1] != 1) && (status[2][0] != 1))) {
+				winnable = true;
+			}
+		}
+		return winnable;
+
+	}
+	public void win() {
+		for (int i = 0; i < 3; i++) {
+			if (((status[i][0] + status[i][1] + status[i][2]) == 4)
+					&& ((status[i][0] != 1) && (status[i][1] != 1) && (status[i][2] != 1))) {
+					if (status[i][0] == 0) {
+						status[i][0] = 2;
+					}
+					else if (status[i][1] == 0) {
+						status[i][1] = 2;
+					}
+					else if (status[i][2] == 0) {
+						status[i][2] = 2;
+					}
+			}
+			else if (((status[0][i] + status[1][i] + status[2][i]) == 4)
+					&& ((status[0][i] != 1) && (status[1][i] != 1) && (status[2][i] != 1))) {
+				if (status[0][i] == 0) {
+					status[0][i] = 2;
+				}
+				else if (status[1][i] == 0) {
+					status[1][i] = 2;
+				}
+				else if (status[2][i] == 0) {
+					status[2][i] = 2;
+				}
+			}
+			else if (((status[0][0] + status[1][1] + status[2][2]) == 4)
+					&& ((status[0][0] != 1) && (status[1][1] != 1) && (status[2][2] != 1))) {
+				
+				if (status[0][0] == 0) {
+					status[0][0] = 2;
+				}
+				else if (status[1][1] == 0) {
+					status[1][1] = 2;
+				}
+				else if (status[2][2] == 0) {
+					status[2][2] = 2;
+				}
+			}
+			else if (((status[0][2] + status[1][1] + status[2][0]) == 4)
+					&& ((status[0][2] != 1) && (status[1][1] != 1) && (status[2][0] != 1))) {
+				
+				if (status[i][2] == 0) {
+					status[i][2] = 2;
+				}
+				else if (status[i][1] == 0) {
+					status[i][1] = 2;
+				}
+				else if (status[i][0] == 0) {
+					status[i][0] = 2;
+				}
+			}
+		}
+		xTurn = true;
+
+	}
+	
+	public boolean blockable() {
+		boolean blockable = false;
+		for (int i = 0; i < 3; i++) {
+			if (((status[i][0] + status[i][1] + status[i][2]) == 2)
+					&& ((status[i][0] != 2) && (status[i][1] != 2) && (status[i][2] != 2))) {
+				for (int j = 0; j < 3; j++) {
+					if (status[i][j] == 0) {
+						status[i][j] = 2;
+					}
+				}
+				blockable = true;
+			}
+			if (((status[0][i] + status[1][i] + status[2][i]) == 2)
+					&& ((status[0][i] != 2) && (status[1][i] != 2) && (status[2][i] != 2))) {
+				for (int j = 0; j < 3; j++) {
+					if (status[j][i] == 0) {
+						status[j][i] = 2;
+					}
+				}
+				blockable = true;
+			}
+			if (((status[0][0] + status[1][1] + status[2][2]) == 2)
+					&& ((status[0][0] != 2) && (status[1][1] != 2) && (status[2][2] != 2))) {
+				for (int j = 0; j < 3; j++) {
+					if (status[j][j] == 0) {
+						status[j][j] = 2;
+					}
+				}
+				blockable = true;
+			}
+			if (((status[0][2] + status[1][1] + status[2][0]) == 2)
+					&& ((status[0][2] != 2) && (status[1][1] != 2) && (status[2][0] != 2))) {
+				for (int j = 2; j >= 0; j--) {
+					if (status[i][j] == 0) {
+						status[i][j] = 2;
+					}
+				}
+				blockable = true;
+			}
+		}
+		
+		xTurn = true;
+		return blockable;
+
+	}
+
+	public void block() {
+		for (int i = 0; i < 3; i++) {
+			if (((status[i][0] + status[i][1] + status[i][2]) == 2)
+					&& ((status[i][0] != 2) && (status[i][1] != 2) && (status[i][2] != 2))) {
+				for (int j = 0; j < 3; j++) {
+					if (status[i][j] == 0) {
+						status[i][j] = 2;
+					}
+				}
+			}
+			else if (((status[0][i] + status[1][i] + status[2][i]) == 2)
+					&& ((status[0][i] != 2) && (status[1][i] != 2) && (status[2][i] != 2))) {
+				for (int j = 0; j < 3; j++) {
+					if (status[j][i] == 0) {
+						status[j][i] = 2;
+					}
+				}
+			}
+			else if (((status[0][0] + status[1][1] + status[2][2]) == 2)
+					&& ((status[0][0] != 2) && (status[1][1] != 2) && (status[2][2] != 2))) {
+				for (int j = 0; j < 3; j++) {
+					if (status[j][j] == 0) {
+						status[j][j] = 2;
+					}
+				}
+			}
+			else if (((status[0][2] + status[1][1] + status[2][0]) == 2)
+					&& ((status[0][2] != 2) && (status[1][1] != 2) && (status[2][0] != 2))) {
+				for (int j = 2; j >= 0; j--) {
+					if (status[i][j] == 0) {
+						status[i][j] = 2;
+					}
+				}
+			}
+		}
+		xTurn = true;
+
+	}
+	
+	public void randomMove(){
+		boolean loop = true;
+		while(loop){
+			int randX = random.nextInt(3);
+			int randY = random.nextInt(3);
+			if(status[randY][randX] == 0){
+				status[randY][randX] = 2;	
+				loop = false;
+			}
+			else {
+				randX = random.nextInt(3);
+				randY = random.nextInt(3);
+			}
+		}
+	}
+	
+	public void delay(long time){
+		long millis = 0;
+		while (millis < time){
+			millis = (System.currentTimeMillis() / 1000)- startTime;
+		}
+	}
+
+}
+
+/*
+ * 1. If statusSum == 1 && X in center{O in corner} 2. If statusSum == 1 && X !
+ * in center{O in center} 3. If winnable {win} 4. If blockable {block} 5. If
+ * else {apply pressure in edge} 6. If else {place O random}
+ */

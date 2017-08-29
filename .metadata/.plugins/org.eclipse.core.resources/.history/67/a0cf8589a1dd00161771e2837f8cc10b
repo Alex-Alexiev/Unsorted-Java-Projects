@@ -1,0 +1,70 @@
+import processing.core.PApplet;
+
+public class Body {
+
+	public Vector pos;
+	public Vector vel;
+	public float mass;
+	public Vector size = new Vector(50, 50, 50);
+	public Vector acc = new Vector(0, 0, 0);
+	static float ke = 220000;
+	public float charge;
+
+	public Body(Vector pos, Vector vel, float mass, float charge) {
+		this.mass = mass;
+		this.pos = pos;
+		this.vel = vel;
+		this.charge = charge;
+	}
+
+	public void updateVelocity(PApplet a) {
+		if (pos.x >= a.width || pos.x <= 0) {
+			vel.x = -vel.x;
+		} else {
+			vel.x += acc.x;
+		}
+		if (pos.y >= a.height || pos.y <= 0) {
+			vel.y = -vel.y;
+		} else {
+			vel.y += acc.y;
+		}
+	}
+
+	public Vector exertEForce(Body b) {
+		float d = pos.distance(b.pos);
+		if (d < size.x){ //prevent body from coming too close together because force will go to infinity
+			d = size.x;
+		}
+		float forceMagnitude = (b.charge * -charge * ke) / (d * d);
+		Vector dif = pos.sub(b.pos);
+		return dif.multiply(forceMagnitude / dif.magnitude());
+	}
+
+	public void draw(PApplet a) {
+		if (charge > 0){
+			a.fill(255,0,0);
+		}
+		if (charge < 0){
+			a.fill(0,0,255);
+		}	
+		if (charge == 0){
+			a.fill(0,0,0);
+		}		
+		a.strokeWeight(0);
+		a.ellipse(pos.x, pos.y, size.x, size.y);
+		a.strokeWeight(10);
+		a.stroke(0);
+		a.line(pos.x, pos.y, pos.x+(acc.x*1000), pos.y+(acc.y*1000));
+	}
+	
+	public void updateAcceleration(Vector force){
+		acc = force.multiply((1/mass));
+	}
+	
+	public void updatePosition(){
+		pos = pos.add(vel);
+	}
+	
+	
+
+}
